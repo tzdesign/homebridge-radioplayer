@@ -22,7 +22,11 @@ class Player {
         if (!this.playing) {
             this.volume = new Volume();
             this.volume.setVolume(this.lastVolume);
-            this.stream = request(this.streamURL);
+            if(this.streamURL.includes("http")){
+                this.stream = request(this.streamURL);
+            } else{
+                this.stream = fs.createReadStream(this.streamURL)
+            }
             this.stream.pipe(new lame.Decoder())
                 .pipe(this.volume)
                 .pipe(new Speaker());
